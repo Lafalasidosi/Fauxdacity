@@ -2,7 +2,7 @@ from pyglet.window import Window
 from pyglet.gl import glClearColor
 from pyglet.graphics import Batch
 from pyglet.shapes import Line
-from pyglet.gui import PushButton
+from pyglet.gui import Button
 
 class Canvas(Window):
     def __init__(self, batched_samples):
@@ -31,7 +31,7 @@ class Canvas(Window):
             right_y1 = right_y2
 
         # buttons
-        play_button = PushButton(0,0,"resources/play.jpg", "resources/play.jpg", None, self.buttonBatch, None)
+        play_button = Button("Play")
 
     def on_draw(self):
         self.clear()
