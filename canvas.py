@@ -1,3 +1,4 @@
+import pyglet.media
 from pyglet.window import Window
 from pyglet.gl import glClearColor
 from pyglet.graphics import Batch
@@ -31,3 +32,5 @@ class Canvas(Window):
     def on_draw(self):
         self.clear()
         self.batch.draw()
+audio_test = pyglet.media.load('start.wav')
+audio_test.play()

@@ -41,10 +41,4 @@ batched_samples = list(itertools.batched(normalized, 2))
 renderer = Canvas(batched_samples)
 run()
 
-
-
-
-
-
-
-
+# Ryan's test comment pls ignore
