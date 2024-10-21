@@ -5,7 +5,7 @@ from pyglet.window import key
 from pyglet.window import mouse
 
 
-window = pyglet.window.Window()
+window = pyglet.window.Window(resizable=True)
 #image = pyglet.resource.image("play.jpg") # looks wrt hello-world, not working directory
 
 
