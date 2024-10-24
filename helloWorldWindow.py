@@ -12,10 +12,10 @@ class HelloWorldWindow(pyglet.window.Window):
         self.labelBatch = pyglet.graphics.Batch()
         self.label = pyglet.text.Label("Hello World!", batch=self.labelBatch)
         self.resizable = True
-        pressed_img = pyglet.image.load('resources/normal/png/16x16/Wizard.png')
-        depressed_img = pyglet.image.load('resources/normal/png/16x16/Home.png')
-        self.pushbutton = pyglet.gui.PushButton(x=100, y=300, pressed=pressed_img, depressed=depressed_img, batch=self.buttonBatch)
-        self.push_handlers(self.pushbutton)
+        #pressed_img = pyglet.image.load('resources/normal/png/16x16/Wizard.png')
+        #depressed_img = pyglet.image.load('resources/normal/png/16x16/Home.png')
+        #self.pushbutton = pyglet.gui.PushButton(x=100, y=300, pressed=pressed_img, depressed=depressed_img, batch=self.buttonBatch)
+        #self.push_handlers(self.pushbutton)
 
     def on_draw(self):
         self.clear()
