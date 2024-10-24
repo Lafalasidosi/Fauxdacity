@@ -15,7 +15,12 @@ A user ought to be able to select segments of audio and perform actions thereon 
 
 A user ought to be able to convert one audio file type to another.
 
+The system ought to autosave user edits periodically.
+
 ## Non-functional Requirements
 
 The user interface shall be minimalistic for ease of use.
 
+The application shall respect filesystem permissions.
+
+The user ought not fear project data loss. 
