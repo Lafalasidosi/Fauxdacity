@@ -5,24 +5,20 @@ from tkinter import *
 from tkinter import filedialog
 
 # global variable for audio
-global audio
+global audio 
+
 
 def browseFiles():
-    filename = filedialog.askopenfilename(initialdir = "/home/lafalasidosi/Fauxdacity",
-                                          title = "Select a File",
-                                          filetypes = (("Text files",
-                                                        "*.txt*"),
-                                                       ("all files",
-                                                        "*.*")))
+    filename = filedialog.askopenfilename(initialdir = "/home/lafalasidosi/Fauxdacity", title = "Select a File", filetypes = (("Text files","*.txt*"),("all files", "*.*")))
     print(filename)
+    global audio 
     audio = pyglet.media.load(filename)
-    print(audio)
-    audio.play() # holy moly this plays sound
 
 
-def playSound():  # this isn't getting called for some reason
-    print(audio)
-    audio.play() # but this does not
+def playSound(): 
+    global audio
+    audio.play() 
+    
 
 class AppWindow(pyglet.window.Window):
     def __init__(self, width, height, *args, **kwargs):
@@ -38,8 +34,10 @@ class AppWindow(pyglet.window.Window):
         self.loadButton = pyglet.gui.PushButton(x=0, y=height-32, pressed=load_pressed, depressed=load_depressed, batch=self.buttonsBatch)
         self.playButton = pyglet.gui.PushButton(x=33, y=height-32, pressed=play_pressed, depressed=play_depressed, batch=self.buttonsBatch)
         self.loadButton.on_press = browseFiles
-        self.playButton.onpress = playSound
-        self.push_handlers(self.playButton, self.loadButton)  
+        self.playButton.on_press = playSound
+        self.push_handlers(self.loadButton)
+        self.push_handlers(self.playButton) 
+        
         
 
     def on_draw(self):
