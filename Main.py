@@ -48,8 +48,14 @@ class AppWindow(pyglet.window.Window):
         array_of_ints = array.array("h", samples)
         normalized = [x / 65536 for x in array_of_ints]
         batched_samples = list(itertools.batched(normalized, 2))
+<<<<<<< Updated upstream
         sample_width = self.width / len(samples)
         moreSamples = batched_samples[0::40]
+=======
+        
+        moreSamples = batched_samples[0::40]
+        sample_width = self.width / len(moreSamples)
+>>>>>>> Stashed changes
 
         # starting point
         x = 0
@@ -65,6 +71,10 @@ class AppWindow(pyglet.window.Window):
             x += sample_width
             left_y1 = left_y2
             right_y1 = right_y2
+<<<<<<< Updated upstream
+=======
+            #TODO: Only provide waveforms when the file is opened.
+>>>>>>> Stashed changes
         
         
 
