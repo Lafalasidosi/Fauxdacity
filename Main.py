@@ -10,16 +10,11 @@ from pyglet.shapes import Line
 global audio 
 
 
-def browseFiles():
-    filename = filedialog.askopenfilename(initialdir = "/home/lafalasidosi/Fauxdacity", title = "Select a File", filetypes = (("Text files","*.txt*"),("all files", "*.*")))
-    print(filename)
-    global audio 
-    audio = pyglet.media.load(filename)
 
 
-def playSound(): 
-    global audio
-    audio.play() 
+
+
+
     
 
 class AppWindow(pyglet.window.Window):
@@ -37,8 +32,8 @@ class AppWindow(pyglet.window.Window):
         self.waveformBatch = pyglet.graphics.Batch()
         self.loadButton = pyglet.gui.PushButton(x=0, y=height-32, pressed=load_pressed, depressed=load_depressed, batch=self.buttonsBatch)
         self.playButton = pyglet.gui.PushButton(x=33, y=height-32, pressed=play_pressed, depressed=play_depressed, batch=self.buttonsBatch)
-        self.loadButton.on_press = browseFiles
-        self.playButton.on_press = playSound
+        self.loadButton.on_press = self.browseFiles
+        self.playButton.on_press = self.playSound
         self.push_handlers(self.loadButton)
         self.push_handlers(self.playButton) 
 
@@ -68,7 +63,15 @@ class AppWindow(pyglet.window.Window):
             right_y1 = right_y2
             #TODO: Only provide waveforms when the file is opened.
         
-        
+    def browseFiles(self):
+        filename = filedialog.askopenfilename(initialdir = "/home/lafalasidosi/Fauxdacity", title = "Select a File", filetypes = (("Text files","*.txt*"),("all files", "*.*")))
+        print(filename)
+        global audio 
+        audio = pyglet.media.load(filename)
+
+    def playSound(self): 
+        global audio
+        audio.play() 
 
     def on_draw(self):
         self.clear()
