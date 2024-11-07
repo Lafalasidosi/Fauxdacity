@@ -22,8 +22,10 @@ class AppWindow(pyglet.window.Window):
         super().__init__(width, height, *args, **kwargs)
         self.width = width
         self.height = height
+        self.lines = []
+        self.loaded_audio = None
         global audio
-        audio = wave.open("start.wav", "rb")
+        #audio = wave.open("start.wav", "rb")
         load_pressed = pyglet.image.load('resources/folder_small.png')  # attr. to Freepik      
         load_depressed = pyglet.image.load('resources/folder_small.png')
         play_pressed = pyglet.image.load('resources/play_button_small.png')
@@ -37,9 +39,9 @@ class AppWindow(pyglet.window.Window):
         self.push_handlers(self.loadButton)
         self.push_handlers(self.playButton) 
 
-
+    def process_audio(self):
         # waveform 
-        samples = audio.readframes(audio.getnframes()) 
+        samples = self.loaded_audio.readframes(self.loaded_audio.getnframes()) 
         array_of_ints = array.array("h", samples)
         normalized = [x / 65536 for x in array_of_ints]
         batched_samples = list(itertools.batched(normalized, 2))
@@ -52,7 +54,7 @@ class AppWindow(pyglet.window.Window):
         left_y1 = 405
         right_y1  = 135
 
-        self.lines = []
+        
         for left, right in moreSamples:
             left_y2 = left * 250 + 405
             right_y2 = right * 250 + 135
@@ -61,13 +63,14 @@ class AppWindow(pyglet.window.Window):
             x += sample_width
             left_y1 = left_y2
             right_y1 = right_y2
-            #TODO: Only provide waveforms when the file is opened.
         
     def browseFiles(self):
+        global audio
         filename = filedialog.askopenfilename(initialdir = "/home/lafalasidosi/Fauxdacity", title = "Select a File", filetypes = (("Text files","*.txt*"),("all files", "*.*")))
         print(filename)
-        global audio 
-        audio = pyglet.media.load(filename)
+        self.loaded_audio = wave.open(filename, 'rb')
+        self.process_audio()
+        self.draw(0.1)
 
     def playSound(self): 
         global audio
@@ -77,6 +80,7 @@ class AppWindow(pyglet.window.Window):
         self.clear()
         self.buttonsBatch.draw()
         self.waveformBatch.draw()
+        
 
 if __name__ == '__main__':
     window = AppWindow(1000, 1000)
