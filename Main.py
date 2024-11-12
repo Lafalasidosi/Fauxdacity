@@ -5,6 +5,7 @@ from tkinter import *
 from tkinter import filedialog
 import array, itertools, wave
 from pyglet.shapes import Line
+import sys
 
 # global variable for audio
 global audio 
@@ -38,6 +39,7 @@ class AppWindow(pyglet.window.Window):
         self.playButton.on_press = self.playSound
         self.push_handlers(self.loadButton)
         self.push_handlers(self.playButton) 
+        self.player = None
 
     def process_audio(self):
         # waveform 
@@ -68,24 +70,30 @@ class AppWindow(pyglet.window.Window):
         global audio
         filename = filedialog.askopenfilename(initialdir = "/home/lafalasidosi/Fauxdacity", title = "Select a File", filetypes = (("Text files","*.txt*"),("all files", "*.*")))
         print(filename)
+        self.player = pyglet.media.load(filename, streaming=False)
         self.loaded_audio = wave.open(filename, 'rb')
         self.process_audio()
         self.draw(0.1)
 
     def playSound(self): 
-        global audio
-        audio.play() 
+        print("Play button pressed.")
+        self.player.play()
+        return
 
     def on_draw(self):
         self.clear()
         self.buttonsBatch.draw()
         self.waveformBatch.draw()
         
-
-if __name__ == '__main__':
+def main(): 
+    
     window = AppWindow(1000, 1000)
     window.set_visible(True)
-    
+
     pyglet.app.run()
+    
+
+if __name__ == '__main__':
+    main()
 
     
