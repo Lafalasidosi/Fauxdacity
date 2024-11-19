@@ -6,17 +6,7 @@ from tkinter import filedialog
 import array, itertools, wave
 from pyglet.shapes import Line
 import sys
-
-# global variable for audio
-global audio 
-
-
-
-
-
-
-
-    
+from pyglet.media import Player
 
 class AppWindow(pyglet.window.Window):
     def __init__(self, width, height, *args, **kwargs):
@@ -25,21 +15,35 @@ class AppWindow(pyglet.window.Window):
         self.height = height
         self.lines = []
         self.loaded_audio = None
-        global audio
-        #audio = wave.open("start.wav", "rb")
+        self.buttonsBatch = pyglet.graphics.Batch()
+        self.waveformBatch = pyglet.graphics.Batch()
+        self.set_up_buttons()
+        self.player = Player() # Player can queue() a Source
+
+    def set_up_buttons(self):
+        # button images
+        # depressed versions ought to be changed at some point
         load_pressed = pyglet.image.load('resources/folder_small.png')  # attr. to Freepik      
         load_depressed = pyglet.image.load('resources/folder_small.png')
         play_pressed = pyglet.image.load('resources/play_button_small.png')
         play_depressed = pyglet.image.load('resources/play_button_small.png')
-        self.buttonsBatch = pyglet.graphics.Batch()
-        self.waveformBatch = pyglet.graphics.Batch()
-        self.loadButton = pyglet.gui.PushButton(x=0, y=height-32, pressed=load_pressed, depressed=load_depressed, batch=self.buttonsBatch)
-        self.playButton = pyglet.gui.PushButton(x=33, y=height-32, pressed=play_pressed, depressed=play_depressed, batch=self.buttonsBatch)
+        pause_pressed = pyglet.image.load('resources/pause_button.png')
+        pause_depressed = pause_pressed
+        
+        # button constructors
+        self.loadButton = pyglet.gui.PushButton(x=0, y=self.height-32, pressed=load_pressed, depressed=load_depressed, batch=self.buttonsBatch)
+        self.playButton = pyglet.gui.PushButton(x=33, y=self.height-32, pressed=play_pressed, depressed=play_depressed, batch=self.buttonsBatch)
+        self.pause_button = pyglet.gui.PushButton(x=65, y=self.height-32, pressed=pause_pressed, depressed=pause_depressed, batch=self.buttonsBatch) 
+
+        # set button event handlers
         self.loadButton.on_press = self.browseFiles
         self.playButton.on_press = self.playSound
+        self.pause_button.on_press = self.pause_sound
+
+        # push handlers to... wherever pyglet does it idk
         self.push_handlers(self.loadButton)
         self.push_handlers(self.playButton) 
-        self.player = None
+        self.push_handlers(self.pause_button)
 
     def process_audio(self):
         # waveform 
@@ -67,10 +71,11 @@ class AppWindow(pyglet.window.Window):
             right_y1 = right_y2
         
     def browseFiles(self):
-        global audio
         filename = filedialog.askopenfilename(initialdir = "/home/lafalasidosi/Fauxdacity", title = "Select a File", filetypes = (("Text files","*.txt*"),("all files", "*.*")))
         print(filename)
-        self.player = pyglet.media.load(filename, streaming=False)
+        # changed from assiging self.player to Source returned by pyglet.media.load()
+        # since Source objects have no pause() function
+        self.player.queue(pyglet.media.load(filename, streaming=False))
         self.loaded_audio = wave.open(filename, 'rb')
         self.process_audio()
         self.draw(0.1)
@@ -78,7 +83,10 @@ class AppWindow(pyglet.window.Window):
     def playSound(self): 
         print("Play button pressed.")
         self.player.play()
-        return
+
+    def pause_sound(self):
+        print("Pause button pressed.")
+        self.player.pause()
 
     def on_draw(self):
         self.clear()
