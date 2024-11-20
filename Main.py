@@ -13,6 +13,7 @@ class AppWindow(pyglet.window.Window):
         super().__init__(width, height, *args, **kwargs)
         self.width = width
         self.height = height
+        self.resizable = True
         self.lines = []
         self.loaded_audio = None
         self.buttons_batch = pyglet.graphics.Batch()
@@ -95,7 +96,7 @@ class AppWindow(pyglet.window.Window):
         
 def main(): 
     
-    window = AppWindow(1000, 1000)
+    window = AppWindow(1000, 1000, resizable=True)
     window.set_visible(True)
 
     pyglet.app.run()
