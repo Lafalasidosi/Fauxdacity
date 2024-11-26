@@ -21,6 +21,8 @@ class AppWindow(pyglet.window.Window):
         self.progress_batch = pyglet.graphics.Batch()
         self.set_up_buttons()
         self.player = Player() # Player can queue() a Source
+        self.progress_bar_pos = (0,0)
+        self.progress_bar = Line(0, 0, 0, 430, color=(255, 255, 255), batch=self.progress_batch)
 
     def set_up_buttons(self):
         # button images
@@ -84,8 +86,6 @@ class AppWindow(pyglet.window.Window):
 
     def play_sound(self): 
         print("Play button pressed.")
-        progress_bar = Line(0, 0, 0, 405, color=(255, 255, 255), batch=self.progress_batch)
-        self.lines.append(progress_bar)
         self.player.play()
 
     def pause_sound(self):
@@ -97,11 +97,11 @@ class AppWindow(pyglet.window.Window):
         self.buttons_batch.draw()
         self.waveform_batch.draw()
         if self.player.playing:
-            pos = self.lines[-1].position
+            pos = self.progress_bar.position
             x = pos[0]
             y = pos[1]
-            self.lines[-1].position = (x+1,y)
-            self.progress_batch.draw()
+            self.progress_bar.position = (x+1,y)
+            self.progress_bar.draw()
 
     def on_resize(self, width, height):
         super().on_resize(width, height)
