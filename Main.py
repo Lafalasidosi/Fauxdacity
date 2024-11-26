@@ -18,6 +18,7 @@ class AppWindow(pyglet.window.Window):
         self.loaded_audio = None
         self.buttons_batch = pyglet.graphics.Batch()
         self.waveform_batch = pyglet.graphics.Batch()
+        self.progress_batch = pyglet.graphics.Batch()
         self.set_up_buttons()
         self.player = Player() # Player can queue() a Source
 
@@ -83,6 +84,8 @@ class AppWindow(pyglet.window.Window):
 
     def play_sound(self): 
         print("Play button pressed.")
+        progress_bar = Line(0, 0, 0, 405, color=(255, 255, 255), batch=self.progress_batch)
+        self.lines.append(progress_bar)
         self.player.play()
 
     def pause_sound(self):
@@ -93,6 +96,12 @@ class AppWindow(pyglet.window.Window):
         self.clear()
         self.buttons_batch.draw()
         self.waveform_batch.draw()
+        if self.player.playing:
+            pos = self.lines[-1].position 
+            x = pos[0]
+            y = pos[1]
+            self.lines[-1].position = (x+1,y)
+            self.progress_batch.draw()        
         
 def main(): 
     
