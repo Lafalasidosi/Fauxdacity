@@ -97,13 +97,32 @@ class AppWindow(pyglet.window.Window):
         self.buttons_batch.draw()
         self.waveform_batch.draw()
         if self.player.playing:
-            pos = self.lines[-1].position 
+            pos = self.lines[-1].position
             x = pos[0]
             y = pos[1]
             self.lines[-1].position = (x+1,y)
-            self.progress_batch.draw()        
-        
-def main(): 
+            self.progress_batch.draw()
+
+    def on_resize(self, width, height):
+        super().on_resize(width, height)
+
+        # reposition buttons vertically
+        # updating the x-coordinates seems unnecessary? The buttons stick to the left edge
+        self.load_button.y = height - 32
+        self.play_button.y = height - 32
+        self.pause_button.y = height - 32
+
+        # if audio is loaded, resize waveform
+        if self.lines:
+            sample_width = width / (len(self.lines))
+            x = 0
+            for i in range(0, len(self.lines)):
+                line = self.lines[i]
+                line.x = x
+                line.x2 = x + sample_width
+                x += sample_width
+
+def main():
     
     window = AppWindow(1000, 1000, resizable=True)
     window.set_visible(True)
