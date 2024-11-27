@@ -16,6 +16,7 @@ class AppWindow(pyglet.window.Window):
         self.resizable = True
         self.lines = []
         self.loaded_audio = None
+        self.source = None
         self.buttons_batch = pyglet.graphics.Batch()
         self.waveform_batch = pyglet.graphics.Batch()
         self.progress_batch = pyglet.graphics.Batch()
@@ -79,7 +80,8 @@ class AppWindow(pyglet.window.Window):
         print(filename)
         # changed from assiging self.player to Source returned by pyglet.media.load()
         # since Source objects have no pause() function
-        self.player.queue(pyglet.media.load(filename, streaming=False))
+        self.source = pyglet.media.load(filename, streaming=False)
+        self.player.queue(self.source)
         self.loaded_audio = wave.open(filename, 'rb')
         self.process_audio()
         self.draw(0.1)
@@ -100,8 +102,8 @@ class AppWindow(pyglet.window.Window):
             pos = self.progress_bar.position
             x = pos[0]
             y = pos[1]
-            self.progress_bar.position = (x+1,y)
-            self.progress_bar.draw()
+            self.progress_bar.position = (x+0.017*self.width/self.source.duration,y)
+            self.progress_batch.draw()
 
     def on_resize(self, width, height):
         super().on_resize(width, height)
