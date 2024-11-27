@@ -7,6 +7,7 @@ import array, itertools, wave
 from pyglet.shapes import Line
 import sys
 from pyglet.media import Player
+import os
 
 class AppWindow(pyglet.window.Window):
     def __init__(self, width, height, *args, **kwargs):
@@ -65,7 +66,7 @@ class AppWindow(pyglet.window.Window):
         left_y1 = 405
         right_y1  = 135
 
-        
+        del self.lines[:]
         for left, right in moreSamples:
             left_y2 = left * 250 + 405
             right_y2 = right * 250 + 135
@@ -76,7 +77,9 @@ class AppWindow(pyglet.window.Window):
             right_y1 = right_y2
         
     def browse_files(self):
-        filename = filedialog.askopenfilename(initialdir = "/home/lafalasidosi/Fauxdacity", title = "Select a File", filetypes = (("Text files","*.txt*"),("all files", "*.*")))
+        self.player.next_source()
+        filename = filedialog.askopenfilename(filetypes=[("WAV files","*.wav*")],initialdir=os.getcwd(),title="Select a File")
+       
         print(filename)
         # changed from assiging self.player to Source returned by pyglet.media.load()
         # since Source objects have no pause() function
