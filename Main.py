@@ -110,12 +110,14 @@ class AppWindow(pyglet.window.Window):
 
     def boost_sound(self):
         print('Boost button pressed.')
-        self.load_audio(self.audio_file_name)
-        samples, width = self.process_audio()
-        for i in range(len(samples)):
-            samples[i] = (samples[i][0]*1.05, samples[i][1]*1.05)
-        self.draw_waveform(samples, width)
-        self.player.volume *= 1.05
+        BOOST_CONSTANT = 1.05
+        for line in self.lines:
+            distance = abs(line.y - line.y2)
+            shift = 0.5*distance*(BOOST_CONSTANT - 1)
+            line.y -= shift
+            line.y2 += shift
+        self.waveform_batch.draw()
+        self.player.volume *= 1.25
 
     def on_draw(self):
         self.clear()
