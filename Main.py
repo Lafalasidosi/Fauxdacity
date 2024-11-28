@@ -25,6 +25,10 @@ class AppWindow(pyglet.window.Window):
         self.progress_bar_pos = (0,0)
         self.progress_bar = Line(0, 0, 0, 430, color=(255, 255, 255), batch=self.progress_batch)
 
+        # filename variable to reload file after end-of-source
+        self.filename = ""
+        self.player.push_handlers(on_eos=self.handle_eos)
+
     def set_up_buttons(self):
         # button images
         # depressed versions ought to be changed at some point
@@ -77,6 +81,7 @@ class AppWindow(pyglet.window.Window):
         
     def browse_files(self):
         filename = filedialog.askopenfilename(initialdir = "/home/lafalasidosi/Fauxdacity", title = "Select a File", filetypes = (("Text files","*.txt*"),("all files", "*.*")))
+        self.filename = filename
         print(filename)
         # changed from assiging self.player to Source returned by pyglet.media.load()
         # since Source objects have no pause() function
@@ -123,6 +128,11 @@ class AppWindow(pyglet.window.Window):
                 line.x = x
                 line.x2 = x + sample_width
                 x += sample_width
+
+    def handle_eos(self):
+        print("End of playback reached.")
+        self.player.queue(pyglet.media.load(self.filename, streaming=False))
+        self.player.pause()
 
 def main():
     
