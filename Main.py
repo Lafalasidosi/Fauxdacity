@@ -36,26 +36,26 @@ class AppWindow(pyglet.window.Window):
         play_depressed = pyglet.image.load('resources/play_button_small.png')
         pause_pressed = pyglet.image.load('resources/pause_button.png')
         pause_depressed = pause_pressed
-        boost_pressed = pyglet.image.load('resources/buck_icon_small.png')
-        boost_depressed = boost_pressed
+        reduce_pressed = pyglet.image.load('resources/buck_icon_small.png')
+        reduce_depressed = reduce_pressed
         
         # button constructors
         self.load_button = pyglet.gui.PushButton(x=0, y=self.height-32, pressed=load_pressed, depressed=load_depressed, batch=self.buttons_batch)
         self.play_button = pyglet.gui.PushButton(x=33, y=self.height-32, pressed=play_pressed, depressed=play_depressed, batch=self.buttons_batch)
         self.pause_button = pyglet.gui.PushButton(x=65, y=self.height-32, pressed=pause_pressed, depressed=pause_depressed, batch=self.buttons_batch) 
-        self.boost_button = pyglet.gui.PushButton(x=97, y=self.height-32, pressed=boost_pressed, depressed=boost_depressed, batch=self.buttons_batch) 
+        self.reduce_button = pyglet.gui.PushButton(x=97, y=self.height-32, pressed=reduce_pressed, depressed=reduce_depressed, batch=self.buttons_batch) 
 
         # set button event handlers
         self.load_button.on_press = self.browse_files
         self.play_button.on_press = self.play_sound
         self.pause_button.on_press = self.pause_sound
-        self.boost_button.on_press = self.boost_sound
+        self.reduce_button.on_press = self.reduce_sound
 
         # push handlers to... wherever pyglet does it idk
         self.push_handlers(self.load_button)
         self.push_handlers(self.play_button) 
         self.push_handlers(self.pause_button)
-        self.push_handlers(self.boost_button)
+        self.push_handlers(self.reduce_button)
 
     def process_audio(self):
         # for producing waveform 
@@ -108,16 +108,20 @@ class AppWindow(pyglet.window.Window):
         print("Pause button pressed.")
         self.player.pause()
 
-    def boost_sound(self):
+    def reduce_sound(self):
         print('Boost button pressed.')
-        BOOST_CONSTANT = 1.05
+        BOOST_CONSTANT = 0.95
         for line in self.lines:
             distance = abs(line.y - line.y2)
-            shift = 0.5*distance*(BOOST_CONSTANT - 1)
-            line.y -= shift
-            line.y2 += shift
+            shift = 0.5*distance*(1-BOOST_CONSTANT)
+            if line.y < line.y2:
+                line.y += shift
+                line.y2 -= shift
+            elif line.y > line.y2:
+                line.y -= shift
+                line.y2 += shift
         self.waveform_batch.draw()
-        self.player.volume *= 1.25
+        self.player.volume *= 0.95
 
     def on_draw(self):
         self.clear()
@@ -138,7 +142,7 @@ class AppWindow(pyglet.window.Window):
         self.load_button.y = height - 32
         self.play_button.y = height - 32
         self.pause_button.y = height - 32
-        self.boost_button.y = height - 32
+        self.reduce_button.y = height - 32
 
         # if audio is loaded, resize waveform
         if self.lines:
