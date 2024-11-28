@@ -175,7 +175,7 @@ class AppWindow(pyglet.window.Window):
     def handle_eos(self):
         print("End of playback reached.")
         self.player.queue(pyglet.media.load(self.audio_file_name, streaming=False))
-        self.progress_bar.pos=(0,0)
+        self.progress_bar = Line(0, 0, 0, 430, color=(255, 255, 255), batch=self.progress_batch)
         self.player.pause()
 
 def main():
